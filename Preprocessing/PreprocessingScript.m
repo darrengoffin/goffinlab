@@ -22,11 +22,16 @@ uiopen;
 DG_read_Intan_RHD2000_file([path, file]);
 
 % At the moment, SmartBox saves 32 channels even if probe is 16 channels. Let's fix this
-if strcmp(AnimalMetadata.Probes.ProbeType, 'NRX_A1x16')
+if strcmp(AnimalMetadata.Probes.ProbeType, 'NRX_A1x16') == 1
    amplifier_data(17:32, :) = [];
 end
 
+% Map electrode channels for given probe
+amplifier_data = DG_mapChannelsForProbeType(amplifier_data, AnimalMetadata.Probes.ProbeType); 
+
 % Extract LFP. This automatically saves a .lfp.mat file. This file should not be altered. Analyses saved elsewhere.
 LFP = DG_getLFP(basename, amplifier_data, time, sampleRate);
+
+
 
 
