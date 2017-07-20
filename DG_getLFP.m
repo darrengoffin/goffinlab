@@ -1,4 +1,4 @@
-% Recordings are made wide?band (0.1 ? 6000 Hz; 20 kHz sampling rate)
+% Recordings are made wide?band (0.1 – 6000 Hz; 20 kHz sampling rate)
 % For LFP analysis, recordings are subsequently filtered (800 Hz low?pass filter) and down?sampled (to 1250 Hz) digitally
 % LFP data and lfp sample rate are then saved into a struct named LFP
 
