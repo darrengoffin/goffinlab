@@ -22,8 +22,7 @@ function [LFP] = DG_getLFP(baseName, data, time, sampleRate, lfpSampleRate)
     LFP.timeSamples = decimate(time, factor);
     LFP.sampleRate = lfpSampleRate;
     
-    baseName = [baseName '.lfp.mat']; 
-    save(baseName, 'LFP')
+    save([baseName '.lfp.mat'], 'LFP')
     
     disp('LFP file created!')
 
