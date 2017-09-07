@@ -1,5 +1,4 @@
 # Data formatting standards
----- 
 
 All files associated with a given recording should be placed into a parent folder with the following basepath:
 
