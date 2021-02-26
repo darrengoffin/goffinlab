@@ -5,6 +5,8 @@ ampFreqs = [16 256];
 nAmplitudes = 121;
 phaseFreqs = [5 10];
 
+willZScore = false;
+
 % Calculate phase
 phase = angle(hilbert(DG_FilterLFP(phaseSignal, samplingRate, phaseFreqs(1), phaseFreqs(2))));
 
@@ -12,7 +14,6 @@ phase = angle(hilbert(DG_FilterLFP(phaseSignal, samplingRate, phaseFreqs(1), pha
 waveletAmps = abs(DG_wavelet(amplitudeSignal, samplingRate, ampFreqs, nAmplitudes, 'space', 'log'));
 
 % Z-score the wavelet amplitudes if required
-willZScore = false;
 if willZScore == true
 	waveletAmps = zscore(waveletAmps, [], 2);
 end
