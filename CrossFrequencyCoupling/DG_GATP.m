@@ -38,7 +38,7 @@ GATP.phaseBins = DG_calculateBinCenters(0, 720, nBins*2);
 
 % Plot if necessary
 if willPlot
-    DG_plotGATP(GATP)
+    DG_plotGATP(GATP.phaseBins, GATP.ampFreqs, GATP.meanAmplitude);
 end
 
 end
