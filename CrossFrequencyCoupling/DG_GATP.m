@@ -48,9 +48,9 @@ function [ampFreqs, nAmplitudes, phaseFreqs, fs, nBins, willZScore, willPlot] = 
     
     p = inputParser;
 
-	addOptional(p, 'ampFreqs', [16 256], @isnumerical)
-	addOptional(p, 'nAmplitudes', 121, @isnumerical)
-	addOptional(p, 'phaseFreqs', [5 10], @isnumerical)
+    addOptional(p, 'ampFreqs', [16 256], @isnumerical)
+    addOptional(p, 'nAmplitudes', 121, @isnumerical)
+    addOptional(p, 'phaseFreqs', [5 10], @isnumerical)
     addOptional(p, 'fs', 1250, @isnumerical)
     addOptional(p, 'nBins', 40, @isnumerical)
     addOptional(p, 'willZScore', true, @islogical)
@@ -58,7 +58,7 @@ function [ampFreqs, nAmplitudes, phaseFreqs, fs, nBins, willZScore, willPlot] = 
 
     parse(p, input{:})
     
-	ampFreqs = p.Results.ampFreqs;
+    ampFreqs = p.Results.ampFreqs;
     nAmplitudes = p.Results.nAmplitudes;
     phaseFreqs = p.Results.phaseFreqs;
     fs = p.Results.fs;
