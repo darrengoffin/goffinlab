@@ -11,8 +11,11 @@ phase = angle(hilbert(DG_FilterLFP(phaseSignal, samplingRate, phaseFreqs(1), pha
 % Calculate wavelet amplitudes
 waveletAmps = abs(DG_wavelet(amplitudeSignal, samplingRate, ampFreqs, nAmplitudes, 'space', 'log'));
 
-% Z-score the wavelet amplitudes
-waveletAmps = zscore(waveletAmps, [], 2);
+% Z-score the wavelet amplitudes if required
+willZScore = false;
+if willZScore == true
+	waveletAmps = zscore(waveletAmps, [], 2);
+end
 
 % Define bins
 nBins = 40;
@@ -26,7 +29,10 @@ for binIdx = 1 : nBins
     meanAmplitude(:, binIdx) = mean(waveletAmps(:, phase <  position(binIdx)+binSize & phase >= position(binIdx)), 2); 
 end
     
-%     meanAmplitude(ampIndex, :) = meanAmplitude(ampIndex, :) ./ sum(meanAmplitude(ampIndex, :));
+% Normalize if not using z-score wavelet amplitudes
+if willZScore == false
+    meanAmplitude = meanAmplitude ./ sum(meanAmplitude, 2);
+end
 
 % Output as struct
 GATP.meanAmplitude = [meanAmplitude meanAmplitude];
