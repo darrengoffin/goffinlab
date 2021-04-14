@@ -25,7 +25,7 @@ for phaseIdx = 1 : nPhases
 	MI(:, phaseIdx) = (log(nBins)-(-sum((meanAmplitude./sum(meanAmplitude)).*log((meanAmplitude./sum(meanAmplitude))))))/log(nBins);
 end
 
-GATF.phaseFreqs = linspace(phaseFreqs(1), phaseFreqs(2), nPhases);
+GATF.phaseFreqs = DG_logspace(phaseFreqs(1), phaseFreqs(2), nPhases);
 GATF.ampFreqs = DG_logspace(ampFreqs(1), ampFreqs(2), nAmps);
 GATF.MI = MI;
 
@@ -41,9 +41,9 @@ function [ampFreqs, nAmps, phaseFreqs, nPhases, fs, nBins, willPlot] = parseInpu
     
     p = inputParser;
 
-	addOptional(p, 'ampFreqs', [16 256], @isnumerical)
-	addOptional(p, 'nAmps', 121, @isnumerical)
-	addOptional(p, 'phaseFreqs', [4 16], @isnumerical)
+    addOptional(p, 'ampFreqs', [25 200], @isnumerical)
+    addOptional(p, 'nAmps', 200, @isnumerical)
+    addOptional(p, 'phaseFreqs', [4 16], @isnumerical)
     addOptional(p, 'nPhases', 73, @isnumerical)
     addOptional(p, 'fs', 1250, @isnumerical)
     addOptional(p, 'nBins', 40, @isnumerical)
@@ -51,7 +51,7 @@ function [ampFreqs, nAmps, phaseFreqs, nPhases, fs, nBins, willPlot] = parseInpu
 
     parse(p, input{:})
     
-	ampFreqs = p.Results.ampFreqs;
+    ampFreqs = p.Results.ampFreqs;
     nAmps = p.Results.nAmps;
     phaseFreqs = p.Results.phaseFreqs;
     nPhases = p.Results.nPhases;
