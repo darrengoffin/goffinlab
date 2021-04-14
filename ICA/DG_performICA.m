@@ -1,15 +1,43 @@
-function ICA = DG_performICA(basepath)
+clc
+clear
+close all
+
+% Define basepath
+basepath = pwd;
+
+% Define filter bandpass
+bandpass = [30 200];
+
+% Load LFP file
+load('LFP.mat')
+
+% Run ICA
+ICA = DG_ICA(LFP, bandpass);
+
+% Save file
+save([basepath filesep 'Analyses' filesep 'ICA' filesep 'ICA.mat'], 'ICA', '-v7.3');
+
+% Plot voltage loadings
+DG_plotVoltageLoadings(ICA.M);
+
+
+% Convience function
+function ICA = DG_ICA(LFP, bandpass)
 
 disp('Performing ICA')
 
-% Bandpass for filtering signal
-bandpass = [30 300];
+% Apply notch filter
 
-% Open LFP file
-load([basepath filesep 'LFP' '.mat'], 'LFP')
+LFP.data = LFP.data - mean(LFP.data);
 
-% Suppress 50Hz noise
-LFP.data = applyNotchFilter(LFP.data, LFP.samplingRate);
+% Pre-whiten data
+LFP.data = WhitenSignalIn(LFP.data);
+
+% Apply notch filter to remove electrical noise
+Fnyq  = LFP.samplingRate/2;
+F_notch = 50; % Notch at 50 Hz
+[b,a] = iirnotch(F_notch/Fnyq, F_notch/Fnyq/20);
+LFP.data = filtfilt(b,a, LFP.data);
 
 % Filter low-frequency information to prevent contamination from theta
 LFP.data = DG_FilterLFP(LFP.data, LFP.samplingRate, bandpass(1), bandpass(2));
@@ -22,41 +50,9 @@ N = find(cumsum(D)/sum(D)>0.98,1);
 [weights, sphere, ~, ~, ~, ~, ICA.v] = runica(LFP.data', 'verbose', 'off', 'pca', N);
 
 % Calculate voltage weights
-ICA.weights = weights * sphere;
-ICA.M  = pinv(ICA.weights);
-
-plotVoltageLoadings(ICA.M)
-
+ICA.weights = weights;
+ICA.sphere = sphere;
+ICA.M = pinv(weights * sphere);
 ICA.bandpass = bandpass;
 
-% Save ICA
-saveICA(ICA, basepath);
-
-end
-
-function data = applyNotchFilter(data, samplingRate)
-
-    Fnyq  = samplingRate/2;
-    F_notch = 50;
-    [b, a] = iirnotch(F_notch/Fnyq, F_notch/Fnyq/20);
-    data = WhitenSignalIn(data);
-    data  = filtfilt(b, a, data);
-
-end
-
-function saveICA(ICA, basepath)
-
-    analysisFolder = [basepath filesep 'Analyses'];
-    if ~exist(analysisFolder, 'dir')
-       mkdir(analysisFolder)
-    end
-    
-    icaFolder = [basepath filesep 'Analyses' filesep 'ICA'];
-    if ~exist(icaFolder, 'dir')
-       mkdir(icaFolder)
-    end
-    
-    filename = 'ICA_voltageLoadings';
-    
-    save([icaFolder filesep filename '.mat'], 'ICA', '-v7.3');
 end
