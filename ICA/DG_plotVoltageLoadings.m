@@ -1,44 +1,40 @@
-function DG_plotVoltageLoadings(voltageLoadings)
+function [lfpResult, csdResult] = DG_plotVoltageLoadings(voltageLoadings)
 
 figure('units','normalized','outerposition',[0 0 1 0.4])
 set(gcf, 'color', 'w');
   
-[nElectrodes, nComponents] = size(voltageLoadings);
-
-% Calculate CSD loadings
-csdLoadings = -diff(voltageLoadings, 2);
-csdSize = size(csdLoadings, 1);
-
-% Normalise voltage loadings
-voltageLoadings = voltageLoadings ./ (max(max(voltageLoadings)) - min(min(voltageLoadings)));
-
-
-% Normalise CSD loadings
-csdLoadings = csdLoadings ./ (max(max(csdLoadings)) - min(min(csdLoadings)));
-
-% Calculate min and max voltage loadings
-minLoading = min(min(voltageLoadings));
-maxLoading = max(max(voltageLoadings));
-
-% Calculate min and max CSD loadings
-minCSDLoading = min(min(csdLoadings));
-maxCSDLoading = max(max(csdLoadings));
+[~, nComponents] = size(voltageLoadings);
 
 for idx = 1 : nComponents
 
+    % Normalise voltage loadings
+    current = voltageLoadings(:,idx);
+    current = smooth(current, 3);
+	current = current ./ max(abs(current));
+
+    lfpResult(:, idx) = current;
+
     % Plot voltage loadings
     subplot(2, nComponents, idx)
-    plotLoadings(voltageLoadings(:,idx), minLoading, maxLoading, 1, nElectrodes)
+    plotLoadings(current)
     title(idx)
+    
+    % Normalise CSD loadings
+    current = -diff(current, 2);
+    current = smooth(current, 3);
+    current = current ./ max(abs(current));
+
+
+	csdResult(:, idx) = current;
 
 	% Plot CSD loadings
     subplot(2, nComponents, idx + nComponents)
-    plotLoadings(csdLoadings(:,idx), minCSDLoading, maxCSDLoading, 1, csdSize)    
+    plotLoadings(current)    
     title(idx)
 
 end
 
-function plotLoadings(data, xMin, xMax, yMin, yMax)
+function plotLoadings(data)
     
     plot(data, (1:length(data))', 'k', 'linewidth', 2)
     hold on
@@ -49,8 +45,7 @@ function plotLoadings(data, xMin, xMax, yMin, yMax)
     set(gca,'ytick',[])
     set(gca,'YColor','w')
     
-    xlim([xMin xMax])
-    ylim([yMin yMax])
+    xlim([-1.1 1.1])
 
 end
   
