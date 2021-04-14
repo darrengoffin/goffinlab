@@ -11,7 +11,7 @@ waveletAmps = abs(DG_wavelet(amplitudeSignal, fs, ampFreqs, nAmplitudes));
 
 % Z-score the wavelet amplitudes if required
 if willZScore == true
-	waveletAmps = zscore(waveletAmps, [], 2);
+    waveletAmps = zscore(waveletAmps, [], 2);
 end
 
 % Define bins
@@ -34,7 +34,7 @@ end
 GATP.meanAmplitude = [meanAmplitude meanAmplitude];
 GATP.ampFreqs = DG_logspace(ampFreqs(1), ampFreqs(2), nAmplitudes);
 GATP.phaseFreqs = phaseFreqs;
-GATP.phaseBins = DG_calculateBinCenters(0, 720, nBins*2);
+GATP.phaseBins = DG_calculateBinCenters(0, 720, nBins * 2);
 
 % Plot if necessary
 if willPlot
@@ -48,8 +48,8 @@ function [ampFreqs, nAmplitudes, phaseFreqs, fs, nBins, willZScore, willPlot] = 
     
     p = inputParser;
 
-    addOptional(p, 'ampFreqs', [16 256], @isnumerical)
-    addOptional(p, 'nAmplitudes', 121, @isnumerical)
+    addOptional(p, 'ampFreqs', [25 200], @isnumerical)
+    addOptional(p, 'nAmplitudes', 200, @isnumerical)
     addOptional(p, 'phaseFreqs', [5 10], @isnumerical)
     addOptional(p, 'fs', 1250, @isnumerical)
     addOptional(p, 'nBins', 40, @isnumerical)
